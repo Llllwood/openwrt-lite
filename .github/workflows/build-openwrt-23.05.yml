@@ -151,13 +151,20 @@ jobs:
         name: ${{ github.event.inputs.device }}-openwrt-23.05
         path: ${{ env.WORKDIR }}/rom/*
 
+    - name: Generate new release version
+      id: version
+      run: |
+        # 生成新的版本号，使用时间戳来确保唯一性
+        NEW_VERSION="openwrt-$(date +'%Y.%m.%d.%H%M%S')"  # 根据时间生成版本号
+        echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
     - name: Create release
       continue-on-error: true
       uses: pmkol/release-action@main
       with:
         name: OpenWrt-23.05
-        allowUpdates: true
-        tag: openwrt-23.05
+        allowUpdates: false  # 禁止更新已有的发布
+        tag: ${{ env.NEW_VERSION }}  # 使用生成的版本号
         body: OpenWrt 23.05 with Kernel 6.11 Enhanced
         commit: main
         replacesArtifacts: true
