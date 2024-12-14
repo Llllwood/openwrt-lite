@@ -155,7 +155,7 @@ jobs:
       id: version
       run: |
         # 生成新的版本号，使用时间戳来确保唯一性
-        NEW_VERSION="openwrt-$(date +'%Y.%m.%d.%H%M%S')"  # 根据时间生成版本号
+        NEW_VERSION="openwrt-23.05-$(date +'%Y.%m.%d.%H%M%S')"  # 根据时间生成版本号
         echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
     - name: Create release
