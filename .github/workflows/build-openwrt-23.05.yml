@@ -162,11 +162,13 @@ jobs:
         # 生成新的版本号，格式为 yyyy-mm-dd-hhss
         NEW_VERSION="openwrt-23.05-$(date +'%Y-%m-%d-%H%M%S')"
         echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+        echo "Generated version: $NEW_VERSION"
 
     - name: Build Docker Image
       working-directory: /builder
       if: github.event.inputs.device == 'x86_64'
       run: |
+        echo "Using version: ${{ env.NEW_VERSION }}"
         docker build -t openwrt-${{ github.event.inputs.device }}:${{ env.NEW_VERSION }} .
 
     - name: Save Docker Image
