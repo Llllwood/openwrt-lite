@@ -156,6 +156,13 @@ jobs:
           echo -e "FROM scratch \nADD $rootfs_file /\n# using exec format so that /sbin/init is proc 1 (see procd docs)\nENTRYPOINT [\"/sbin/init\"]" >> Dockerfile
         fi
 
+    - name: Generate new release version
+      id: version
+      run: |
+        # 生成新的版本号，格式为 yyyy-mm-dd-hhss
+        NEW_VERSION="openwrt-23.05-$(date +'%Y-%m-%d-%H%M%S')"
+        echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
     - name: Build Docker Image
       working-directory: /builder
       if: github.event.inputs.device == 'x86_64'
@@ -173,13 +180,6 @@ jobs:
       with:
         name: ${{ github.event.inputs.device }}-openwrt-23.05
         path: ${{ env.WORKDIR }}/rom/*
-
-    - name: Generate new release version
-      id: version
-      run: |
-        # 生成新的版本号，格式为 yyyy-mm-dd-hhss
-        NEW_VERSION="openwrt-23.05-$(date +'%Y-%m-%d-%H%M%S')"
-        echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
 
     - name: Create release
       continue-on-error: true
