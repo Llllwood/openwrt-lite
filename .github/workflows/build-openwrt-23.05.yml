@@ -138,8 +138,6 @@ jobs:
           cp -a openwrt/bin/targets/rockchip/*/config.buildinfo info/config.buildinfo
           cd rom && sha256sum *gz > ../info/sha256sums.txt
         elif [ "${{ github.event.inputs.device }}" = "x86_64" ]; then
-          cp -a openwrt/bin/targets/x86/*/*-ext4-combined.img.gz rom/
-          cp -a openwrt/bin/targets/x86/*/*-squashfs-combined.img.gz rom/
           cp -a openwrt/bin/targets/x86/*/*-ext4-combined-efi.img.gz rom/
           cp -a openwrt/bin/targets/x86/*/*-squashfs-combined-efi.img.gz rom/
           cp -a openwrt/bin/targets/x86/*/*-generic-rootfs.tar.gz rom/
@@ -148,7 +146,27 @@ jobs:
           cd rom && sha256sum *gz > ../info/sha256sums.txt
         fi
         cd ..
-        tar zcf rom/buildinfo_${{ matrix.model }}.tar.gz info
+        tar zcf rom/buildinfo_${{ github.event.inputs.device }}.tar.gz info
+
+    - name: Generate Dockerfile
+      working-directory: /builder
+      run: |
+        if [ "${{ github.event.inputs.device }}" = "x86_64" ]; then
+          rootfs_file=$(find openwrt/bin/targets/x86 -name "*x86-64-generic-rootfs.tar.gz" | head -1)
+          echo -e "FROM scratch \nADD $rootfs_file /\n# using exec format so that /sbin/init is proc 1 (see procd docs)\nENTRYPOINT [\"/sbin/init\"]" >> Dockerfile
+        fi
+
+    - name: Build Docker Image
+      working-directory: /builder
+      if: github.event.inputs.device == 'x86_64'
+      run: |
+        docker build -t openwrt-${{ github.event.inputs.device }}:${{ env.NEW_VERSION }} .
+
+    - name: Save Docker Image
+      working-directory: /builder
+      if: github.event.inputs.device == 'x86_64'
+      run: |
+        docker save -o rom/openwrt-${{ github.event.inputs.device }}-${{ env.NEW_VERSION }}.tar openwrt-${{ github.event.inputs.device }}:${{ env.NEW_VERSION }}
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
@@ -156,13 +174,20 @@ jobs:
         name: ${{ github.event.inputs.device }}-openwrt-23.05
         path: ${{ env.WORKDIR }}/rom/*
 
+    - name: Generate new release version
+      id: version
+      run: |
+        # 生成新的版本号，格式为 yyyy-mm-dd-hhss
+        NEW_VERSION="openwrt-23.05-$(date +'%Y-%m-%d-%H%M%S')"
+        echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+
     - name: Create release
       continue-on-error: true
       uses: pmkol/release-action@main
       with:
         name: OpenWrt-23.05
-        allowUpdates: true
-        tag: openwrt-23.05
+        allowUpdates: false  # 禁止更新已有的发布
+        tag: ${{ env.NEW_VERSION }}  # 使用生成的版本号
         body: OpenWrt 23.05 with Kernel 6.11 Enhanced
         commit: main
         replacesArtifacts: true
