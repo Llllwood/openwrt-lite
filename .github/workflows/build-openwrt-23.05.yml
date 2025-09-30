@@ -28,7 +28,7 @@ on:
 
 jobs:
   build:
-    name: Build OpenWrt 23.05 ${{ github.event.inputs.device }} (${{ github.event.inputs.device }})
+    name: Build OpenWrt 23.05 ${{ github.event.inputs.device }}
     runs-on: ubuntu-24.04
     defaults:
       run:
@@ -148,7 +148,34 @@ jobs:
           cd rom && sha256sum *gz > ../info/sha256sums.txt
         fi
         cd ..
-        tar zcf rom/buildinfo_${{ matrix.model }}.tar.gz info
+        tar zcf rom/buildinfo_${{ github.event.inputs.device }}.tar.gz info
+
+    - name: Generate Dockerfile
+      working-directory: /builder
+      if: github.event.inputs.device == 'x86_64'
+      run: |
+        rootfs_file=$(find openwrt/bin/targets/x86 -name "*x86-64-generic-rootfs.tar.gz" | head -1)
+        echo -e "FROM scratch \nADD $rootfs_file /\nENTRYPOINT [\"/sbin/init\"]" >> Dockerfile
+
+    - name: Generate new release version
+      id: version
+      run: |
+        NEW_VERSION="openwrt-23.05-$(date +'%Y-%m-%d-%H%M%S')"
+        echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+        echo "Generated version: $NEW_VERSION"
+
+    - name: Build Docker Image
+      working-directory: /builder
+      if: github.event.inputs.device == 'x86_64'
+      run: |
+        echo "Using version: ${{ env.NEW_VERSION }}"
+        docker build -t openwrt-${{ github.event.inputs.device }}:${{ env.NEW_VERSION }} .
+
+    - name: Save Docker Image
+      working-directory: /builder
+      if: github.event.inputs.device == 'x86_64'
+      run: |
+        docker save -o rom/openwrt-${{ github.event.inputs.device }}-${{ env.NEW_VERSION }}.tar openwrt-${{ github.event.inputs.device }}:${{ env.NEW_VERSION }}
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
@@ -161,8 +188,8 @@ jobs:
       uses: ncipollo/release-action@v1.20.0
       with:
         name: OpenWrt-23.05
-        allowUpdates: true
-        tag: openwrt-23.05
+        allowUpdates: false
+        tag: ${{ env.NEW_VERSION }}
         body: OpenWrt 23.05 with Kernel 6.11 Enhanced
         commit: main
         replacesArtifacts: true

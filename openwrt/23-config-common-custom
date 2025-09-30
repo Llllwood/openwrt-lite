@@ -2,52 +2,56 @@
 # CONFIG_PACKAGE_luci-app-adguardhome is not set
 # CONFIG_PACKAGE_luci-app-airconnect is not set
 # CONFIG_PACKAGE_luci-app-airplay2 is not set
-CONFIG_PACKAGE_luci-app-aria2=y
-# CONFIG_PACKAGE_luci-app-cifs-mount is not set
+## Aria2 下载工具的 Web 界面管理工具
+# CONFIG_PACKAGE_luci-app-aria2 is not set
+## 定时重启
+# CONFIG_PACKAGE_luci-app-autoreboot is not set
 # CONFIG_PACKAGE_luci-app-commands is not set
-CONFIG_PACKAGE_luci-app-cpufreq=y
-CONFIG_PACKAGE_luci-app-diskman=y
+## 实时信息
+# CONFIG_PACKAGE_luci-app-cpufreq is not set
+## 磁盘管理
+# CONFIG_PACKAGE_luci-app-diskman is not set
 # CONFIG_PACKAGE_luci-app-dufs is not set
 # CONFIG_PACKAGE_luci-app-einat is not set
 # CONFIG_PACKAGE_luci-app-eqos is not set
-CONFIG_PACKAGE_luci-app-eqosplus=y
+# CONFIG_PACKAGE_luci-app-eqosplus is not set
 # CONFIG_PACKAGE_luci-app-filebrowser-go is not set
 # CONFIG_PACKAGE_luci-app-filemanager is not set
-CONFIG_PACKAGE_luci-app-frpc=y
-CONFIG_PACKAGE_luci-app-hd-idle=y
-# CONFIG_PACKAGE_luci-app-gost is not set
+# CONFIG_PACKAGE_luci-app-frpc is not set
+# CONFIG_PACKAGE_luci-app-hd-idle is not set
 # CONFIG_PACKAGE_luci-app-gowebdav is not set
 # CONFIG_PACKAGE_luci-app-ksmbd is not set
 # CONFIG_PACKAGE_luci-app-mentohust is not set
-CONFIG_PACKAGE_luci-app-mosdns=y
+# CONFIG_PACKAGE_luci-app-mosdns is not set
 # CONFIG_PACKAGE_luci-app-msd_lite is not set
 # CONFIG_PACKAGE_luci-app-natmap is not set
-CONFIG_PACKAGE_luci-app-netdata=y
-CONFIG_PACKAGE_luci-app-netspeedtest=y
-# CONFIG_PACKAGE_luci-app-nfs is not set
-CONFIG_PACKAGE_luci-app-nlbwmon=y
+## 实时监控
+# CONFIG_PACKAGE_luci-app-netdata is not set
+## 网速测试
+# CONFIG_PACKAGE_luci-app-netspeedtest is not set
+## 网络带宽监控
+# CONFIG_PACKAGE_luci-app-nlbwmon is not set
 # CONFIG_PACKAGE_luci-app-oaf is not set
 # CONFIG_PACKAGE_luci-app-qbittorrent is not set
-# CONFIG_PACKAGE_luci-app-quickfile is not set
 # CONFIG_PACKAGE_luci-app-qosmate is not set
+## 释放内存
 CONFIG_PACKAGE_luci-app-ramfree=y
-CONFIG_PACKAGE_luci-app-samba4=y
-# CONFIG_PACKAGE_luci-app-smartdns is not set
-CONFIG_PACKAGE_luci-app-socat=y
+# CONFIG_PACKAGE_luci-app-samba4 is not set
+## 端口转发
+# CONFIG_PACKAGE_luci-app-socat is not set
 # CONFIG_PACKAGE_luci-app-sqm is not set
-# CONFIG_PACKAGE_luci-app-statistics is not set
-CONFIG_PACKAGE_luci-app-tailscale=y
-# CONFIG_PACKAGE_luci-app-timedreboot is not set
-CONFIG_PACKAGE_luci-app-ttyd=y
+# CONFIG_PACKAGE_luci-app-tailscale is not set
+# CONFIG_PACKAGE_luci-app-ttyd is not set
 # CONFIG_PACKAGE_luci-app-udpxy is not set
 # CONFIG_PACKAGE_luci-app-uhttpd is not set
 # CONFIG_PACKAGE_luci-app-unblockneteasemusic is not set
-CONFIG_PACKAGE_luci-app-upnp=y
+# CONFIG_PACKAGE_luci-app-upnp is not set
 # CONFIG_PACKAGE_luci-app-usb-printer is not set
 # CONFIG_PACKAGE_luci-app-vlmcsd is not set
 # CONFIG_PACKAGE_luci-app-vsftpd is not set
-CONFIG_PACKAGE_luci-app-watchcat=y
-CONFIG_PACKAGE_luci-app-wolplus=y
+# CONFIG_PACKAGE_luci-app-watchcat is not set
+## Wake on LAN
+# CONFIG_PACKAGE_luci-app-wolplus is not set
 # CONFIG_PACKAGE_luci-app-zerotier is not set
 
 ### DDNS
@@ -74,7 +78,7 @@ CONFIG_PACKAGE_luci-app-wolplus=y
 # CONFIG_PACKAGE_xl2tpd is not set
 
 ### Mihomo
-# CONFIG_PACKAGE_luci-app-nikki is not set
+CONFIG_PACKAGE_luci-app-nikki=y
 # CONFIG_PACKAGE_luci-app-openclash is not set
 
 ### Passwall
@@ -94,8 +98,18 @@ CONFIG_PACKAGE_luci-app-wolplus=y
 # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Trojan_GO is not set
 # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Trojan_Plus is not set
 # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_V2ray_Plugin is not set
-# CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Simple_Obfs is not set
-# CONFIG_PACKAGE_simple-obfs-client is not set
+
+### SSR Plus
+# CONFIG_PACKAGE_luci-app-ssr-plus is not set
+# CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_IPT2Socks is not set
+# CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Kcptun is not set
+# CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Redsocks2 is not set
+# CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Simple_Obfs is not set
+# CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Xray is not set
+# CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Shadowsocks_Xray_Plugin is not set
+# CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_ShadowsocksR_Libev_Client is not set
+# CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Hysteria is not set
+# CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Trojan is not set
 
 ### Singbox
 # CONFIG_PACKAGE_luci-app-homeproxy is not set
@@ -129,4 +143,4 @@ CONFIG_PACKAGE_luci-app-momo=y
 ### Add more luci-apps below
 ### Some packages may fail to build with GCC 14
 ### Please add new packages or patches in openwrt/scripts/06-custom.sh
-# CONFIG_PACKAGE_luci-app-openlist2 is not set
+# CONFIG_PACKAGE_luci-app-alist is not set
